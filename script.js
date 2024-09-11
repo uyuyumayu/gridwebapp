@@ -28,11 +28,33 @@ const downloadButton = document.getElementById('download-button');
 const downloadFormatSelect = document.getElementById('download-format');
 const gridOnlyButton = document.getElementById('grid-only-button');
 const gridOnlyFormatSelect = document.getElementById('grid-only-format');
+const fileInput = document.getElementById('file-input');
+
+// ドロップエリアクリックイベント
+dropArea.addEventListener('click', () => {
+  fileInput.click(); // ファイル入力欄をクリック
+});
+
+// ファイル選択イベント
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    image = new Image();
+    image.onload = () => {
+      updatePreview();
+    };
+    image.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+});
 
 let image = null;
-let offsetX = 0;
-let offsetY = 0;
-let isDragging = false;
+//let offsetX = 0; // 削除
+//let offsetY = 0; // 削除
+//let isDragging = false; // 削除
 
 // グリッドモードの初期設定
 gridModeSizeRadio.checked = true;
@@ -87,7 +109,6 @@ gradientOuterInput.addEventListener('input', updatePreview);
 // グリッドモード変更イベント
 gridModeSizeRadio.addEventListener('change', handleGridModeChange);
 gridModeCountRadio.addEventListener('change', handleGridModeChange);
-
 // ダウンロードボタンクリックイベント
 downloadButton.addEventListener('click', () => {
   const format = downloadFormatSelect.value;
@@ -206,7 +227,6 @@ function handleLineStyleChange() {
 
   updatePreview();
 }
-
 // プレビュー更新関数
 function updatePreview() {
   if (!image) return;
@@ -238,13 +258,12 @@ function updatePreview() {
   previewCanvas.width = image.width;
   previewCanvas.height = image.height;
 
-  // 画像を描画 (オフセットは適用しない)
-  previewCtx.drawImage(image, 0, 0);
+  // 画像を描画 (オフセットを適用)
+  previewCtx.drawImage(image, offsetX, offsetY);
 
   // グリッドを描画 (オフセットを適用)
   drawGrid(previewCtx, offsetX, offsetY, previewCanvas.width, previewCanvas.height, rows, cols, lineWidth, lineColor, lineStyle, gridText, textFontSize, textRotation, lineOpacity, textSpacing); 
 }
-
 // グリッドを描画する関数
 function drawGrid(ctx, offsetX, offsetY, width, height, rows, cols, lineWidth, lineColor, lineStyle, gridText, textFontSize, textRotation, lineOpacity, spacingFactor) {
   if (lineStyle === "text") {
@@ -333,7 +352,6 @@ function drawTextGrid(ctx, offsetX, offsetY, width, height, rows, cols, lineColo
     }
   }
 }
-
 // マウスイベントでプレビューをドラッグ
 previewArea.addEventListener('mousedown', (e) => {
   isDragging = true;
@@ -347,8 +365,8 @@ previewArea.addEventListener('mousemove', (e) => {
   offsetY += e.movementY;
 
   // 画像がプレビューエリアからはみ出ないように調整
-  offsetX = Math.max(previewArea.offsetWidth - image.width, Math.min(0, offsetX));
-  offsetY = Math.max(previewArea.offsetHeight - image.height, Math.min(0, offsetY));
+    offsetX = Math.max(previewCanvas.width - image.width, Math.min(0, offsetX)); // previewArea.offsetWidth を previewCanvas.width に変更
+   offsetY = Math.max(previewCanvas.height - image.height, Math.min(0, offsetY)); // previewArea.offsetHeight を previewCanvas.height に変更
 
   updatePreview();
 });
