@@ -105,6 +105,20 @@ gridOnlyButton.addEventListener('click', () => {
   // グリッドのみを描画
   drawGrid(ctx, image.width, image.height, 0, 0); // 画像の幅と高さを渡す
 
+  // グリッド線以外の部分を透明にする (png/webpの場合)
+  if (format === 'png' || format === 'webp') {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    for (let i = 3; i < data.length; i += 4) {
+      if (data[i] === 0) { // アルファ値が0 (透明) のピクセルのみ残す
+        data[i - 3] = 0;  // R
+        data[i - 2] = 0;  // G
+        data[i - 1] = 0;  // B
+      }
+    }
+    ctx.putImageData(imageData, 0, 0);
+  }
+
   // ダウンロードリンクを作成
   const link = document.createElement('a');
   link.download = filename;
@@ -142,11 +156,11 @@ function updatePreview() {
   previewCanvas.width = image.width;
   previewCanvas.height = image.height;
 
-  // 画像を描画 (オフセットを適用)
-  previewCtx.drawImage(image, offsetX, offsetY);
+  // 画像を描画 (オフセットは適用しない)
+  previewCtx.drawImage(image, 0, 0);
 
   // グリッドを描画 (オフセットを適用)
-  drawGrid(previewCtx, previewCanvas.width, previewCanvas.height, offsetX, offsetY); // キャンバスの幅と高さを渡す
+  drawGrid(previewCtx, previewCanvas.width, previewCanvas.height, offsetX, offsetY);
 }
 
 // グリッドを描画する関数
