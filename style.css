@@ -1,0 +1,13 @@
+#dropArea {
+  width: 300px;
+  height: 200px;
+  border: 2px dashed #ccc;
+  text-align: center;
+  line-height: 200px;
+  margin-bottom: 20px;
+}
+
+#canvas {
+  max-width: 100%;
+  height: auto;
+}
