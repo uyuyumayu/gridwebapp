@@ -31,14 +31,15 @@ h1, h2 {
 }
 
 label {
-  display: block;
+  display: inline-block;
   margin-bottom: 5px;
   color: #555; 
+  width: 130px;        
+  text-align: right;    
 }
 
 input, select {
   margin-bottom: 10px;
-  width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -53,14 +54,11 @@ input[type="color"] {
 .input-group {
   display: flex;
   align-items: center;
-}
-
-.input-group label {
-  width: 80px; 
+  margin-bottom: 10px; 
 }
 
 .input-group input[type="number"] {
-  width: calc(50% - 45px); 
+  width: 60px;          
   margin-right: 10px; 
 }
 
@@ -117,4 +115,10 @@ input[type="color"] {
 
 .download-icon {
   margin-left: 10px;
+}
+
+/* グレーアウトのスタイル */
+input:disabled, select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
