@@ -259,7 +259,7 @@ function updatePreview() {
   previewCanvas.height = image.height;
 
   // 画像を描画 (オフセットを適用)
-  previewCtx.drawImage(image, offsetX, offsetY);
+  previewCtx.drawImage(image, 0, 0);
 
   // グリッドを描画 (オフセットを適用)
   drawGrid(previewCtx, offsetX, offsetY, previewCanvas.width, previewCanvas.height, rows, cols, lineWidth, lineColor, lineStyle, gridText, textFontSize, textRotation, lineOpacity, textSpacing); 
