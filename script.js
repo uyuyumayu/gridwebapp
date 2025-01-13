@@ -161,56 +161,55 @@ gridModeSizeRadio.addEventListener('change', handleGridModeChange);
 gridModeCountRadio.addEventListener('change', handleGridModeChange);
 // ダウンロードボタンクリックイベント
 downloadButton.addEventListener('click', () => {
-  const format = downloadFormatSelect.value;
-  const filename = `grid_image.${format}`;
+    const format = downloadFormatSelect.value;
+    const filename = `grid_image.${format}`;
 
-  // Canvasのサイズを画像のサイズに合わせる
-  const canvas = document.createElement('canvas');
-  canvas.width = image.width;
-  canvas.height = image.height;
-  const ctx = canvas.getContext('2d');
+    // Canvasのサイズを画像のサイズに合わせる
+    const canvas = document.createElement('canvas');
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const ctx = canvas.getContext('2d');
 
-  // 必要な変数を取得
-  const gridMode = document.querySelector('input[name="grid-mode"]:checked').value;
-  const gridType = document.querySelector('input[name="grid-type"]:checked').value;
-  let rows, cols;
-  if (gridMode === 'size') {
-    const gridSize = parseInt(gridSizeInput.value, 10) || 50;
-    rows = Math.floor(image.height / gridSize);
-    cols = Math.floor(image.width / gridSize);
-  } else {
-    rows = parseInt(gridRowsInput.value, 10);
-    cols = parseInt(gridColsInput.value, 10);
-  }
-  const lineWidth = parseInt(lineWidthInput.value, 10);
-  const lineColor = lineColorInput.value;
-  const lineStyle = lineStyleSelect.value;
-  const gridText = gridTextInput.value;
-  const textFontSize = parseInt(textFontSizeInput.value, 10);
-  const textRotation = textRotationSelect.value;
-  const textSpacing = parseFloat(textSpacingInput.value) || 2.5;
-  const lineOpacity = parseFloat(lineOpacityInput.value);
-
-  // 画像とグリッドを描画
-  ctx.drawImage(image, 0, 0);
-  const offsetX = parseInt(gridOffsetXInput.value, 10);
-  const offsetY = parseInt(gridOffsetYInput.value, 10);
-  if (gridType === 'square') {
-    if (lineStyle === "text") {
-      drawTextGrid(ctx, offsetX, offsetY, image.width, image.height, rows, cols, lineColor, gridText, textFontSize, textRotation, lineOpacity, textSpacing);
+    // 必要な変数を取得
+    const gridMode = document.querySelector('input[name="grid-mode"]:checked').value;
+    const gridType = document.querySelector('input[name="grid-type"]:checked').value;
+    let rows, cols;
+    if (gridMode === 'size') {
+        const gridSize = parseInt(gridSizeInput.value, 10) || 50;
+        rows = Math.floor(image.height / gridSize);
+        cols = Math.floor(image.width / gridSize);
     } else {
-      drawSquareGrid(ctx, offsetX, offsetY, image.width, image.height, rows, cols, lineWidth, lineColor, lineStyle, lineOpacity);
+        rows = parseInt(gridRowsInput.value, 10);
+        cols = parseInt(gridColsInput.value, 10);
     }
-  } else if (gridType === 'hex') {
-    drawHexGrid(ctx, offsetX, offsetY, image.width, image.height, rows, cols, lineWidth, lineColor, lineOpacity);
-  }
-  // ダウンロードリンクを作成
-  const link = document.createElement('a');
-  link.download = filename;
-  link.href = canvas.toDataURL(`image/${format}`);
-  link.click();
-});
+    const lineWidth = parseInt(lineWidthInput.value, 10);
+    const lineColor = lineColorInput.value;
+    const lineStyle = lineStyleSelect.value;
+    const gridText = gridTextInput.value;
+    const textFontSize = parseInt(textFontSizeInput.value, 10);
+    const textRotation = textRotationSelect.value;
+    const textSpacing = parseFloat(textSpacingInput.value) || 2.5;
+    const lineOpacity = parseFloat(lineOpacityInput.value);
 
+    // 画像とグリッドを描画
+    ctx.drawImage(image, 0, 0);
+    const offsetX = parseInt(gridOffsetXInput.value, 10);
+    const offsetY = parseInt(gridOffsetYInput.value, 10);
+    if (gridType === 'square') {
+        if (lineStyle === "text") {
+            drawTextGrid(ctx, offsetX, offsetY, image.width, image.height, rows, cols, lineColor, gridText, textFontSize, textRotation, lineOpacity, textSpacing);
+        } else {
+            drawSquareGrid(ctx, offsetX, offsetY, image.width, image.height, rows, cols, lineWidth, lineColor, lineStyle, lineOpacity);
+        }
+    } else if (gridType === 'hex') {
+        drawHexGrid(ctx, offsetX, offsetY, image.width, image.height, rows, cols, lineWidth, lineColor, lineOpacity, lineStyle); // lineStyleを渡す
+    }
+    // ダウンロードリンクを作成
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = canvas.toDataURL(`image/${format}`);
+    link.click();
+});
 // グリッドのみダウンロードボタンクリックイベント
 gridOnlyButton.addEventListener('click', () => {
   const format = gridOnlyFormatSelect.value;
@@ -257,7 +256,7 @@ gridOnlyButton.addEventListener('click', () => {
       drawSquareGrid(ctx, offsetX, offsetY, image.width, image.height, rows, cols, lineWidth, lineColor, lineStyle, lineOpacity);
     }
   } else if (gridType === 'hex') {
-    drawHexGrid(ctx, offsetX, offsetY, image.width, image.height, rows, cols, lineWidth, lineColor, lineOpacity);
+    drawHexGrid(ctx, offsetX, offsetY, image.width, image.height, rows, cols, lineWidth, lineColor, lineOpacity, lineStyle); // lineStyleを渡す
   }
   // グリッド線以外の部分を透明にする (png/webpの場合)
   if (format === 'png' || format === 'webp') {
@@ -299,49 +298,49 @@ function handleLineStyleChange() {
 }
 // プレビュー更新関数
 function updatePreview() {
-  if (!image) return;
+    if (!image) return;
 
-  const gridMode = document.querySelector('input[name="grid-mode"]:checked').value;
-  let rows, cols;
+    const gridMode = document.querySelector('input[name="grid-mode"]:checked').value;
+    let rows, cols;
 
-  if (gridMode === 'size') {
-    const gridSize = parseInt(gridSizeInput.value, 10) || 50;
-    rows = Math.floor(image.height / gridSize);
-    cols = Math.floor(image.width / gridSize);
-  } else {
-    rows = parseInt(gridRowsInput.value, 10);
-    cols = parseInt(gridColsInput.value, 10);
-  }
-
-  const offsetX = parseInt(gridOffsetXInput.value, 10);
-  const offsetY = parseInt(gridOffsetYInput.value, 10);
-  const lineWidth = parseInt(lineWidthInput.value, 10);
-  const lineColor = lineColorInput.value;
-  const lineStyle = lineStyleSelect.value;
-  const gridText = gridTextInput.value;
-  const textFontSize = parseInt(textFontSizeInput.value, 10);
-  const textRotation = textRotationSelect.value;
-  const textSpacing = parseFloat(textSpacingInput.value) || 2.5;
-  const lineOpacity = parseFloat(lineOpacityInput.value);
-
-  // キャンバスのサイズを画像のサイズに合わせる
-  previewCanvas.width = image.width;
-  previewCanvas.height = image.height;
-
-  // 画像を描画 (オフセットを適用)
-  previewCtx.drawImage(image, 0, 0);
-
-  const gridType = document.querySelector('input[name="grid-type"]:checked').value;
-  // グリッドを描画 (オフセットを適用)
-  if (gridType === 'square') {
-    if (lineStyle === "text") {
-      drawTextGrid(previewCtx, offsetX, offsetY, previewCanvas.width, previewCanvas.height, rows, cols, lineColor, gridText, textFontSize, textRotation, lineOpacity, textSpacing);
+    if (gridMode === 'size') {
+        const gridSize = parseInt(gridSizeInput.value, 10) || 50;
+        rows = Math.floor(image.height / gridSize);
+        cols = Math.floor(image.width / gridSize);
     } else {
-      drawSquareGrid(previewCtx, offsetX, offsetY, previewCanvas.width, previewCanvas.height, rows, cols, lineWidth, lineColor, lineStyle, lineOpacity);
+        rows = parseInt(gridRowsInput.value, 10);
+        cols = parseInt(gridColsInput.value, 10);
     }
-  } else if (gridType === 'hex') {
-    drawHexGrid(previewCtx, offsetX, offsetY, previewCanvas.width, previewCanvas.height, rows, cols, lineWidth, lineColor, lineOpacity);
-  }
+
+    const offsetX = parseInt(gridOffsetXInput.value, 10);
+    const offsetY = parseInt(gridOffsetYInput.value, 10);
+    const lineWidth = parseInt(lineWidthInput.value, 10);
+    const lineColor = lineColorInput.value;
+    const lineStyle = lineStyleSelect.value;
+    const gridText = gridTextInput.value;
+    const textFontSize = parseInt(textFontSizeInput.value, 10);
+    const textRotation = textRotationSelect.value;
+    const textSpacing = parseFloat(textSpacingInput.value) || 2.5;
+    const lineOpacity = parseFloat(lineOpacityInput.value);
+
+    // キャンバスのサイズを画像のサイズに合わせる
+    previewCanvas.width = image.width;
+    previewCanvas.height = image.height;
+
+    // 画像を描画 (オフセットを適用)
+    previewCtx.drawImage(image, 0, 0);
+
+    const gridType = document.querySelector('input[name="grid-type"]:checked').value;
+    // グリッドを描画 (オフセットを適用)
+    if (gridType === 'square') {
+        if (lineStyle === "text") {
+            drawTextGrid(previewCtx, offsetX, offsetY, previewCanvas.width, previewCanvas.height, rows, cols, lineColor, gridText, textFontSize, textRotation, lineOpacity, textSpacing);
+        } else {
+            drawSquareGrid(previewCtx, offsetX, offsetY, previewCanvas.width, previewCanvas.height, rows, cols, lineWidth, lineColor, lineStyle, lineOpacity);
+        }
+    } else if (gridType === 'hex') {
+        drawHexGrid(previewCtx, offsetX, offsetY, previewCanvas.width, previewCanvas.height, rows, cols, lineWidth, lineColor, lineOpacity, lineStyle); // lineStyleを渡す
+    }
 }
 // グリッドを描画する関数
 function drawGrid(ctx, offsetX, offsetY, width, height, rows, cols, lineWidth, lineColor, lineStyle, gridText, textFontSize, textRotation, lineOpacity, spacingFactor) {
@@ -431,33 +430,46 @@ function drawTextGrid(ctx, offsetX, offsetY, width, height, rows, cols, lineColo
     }
   }
 }
-
 // ヘクスグリッドを描画する関数
-function drawHexGrid(ctx, offsetX, offsetY, width, height, rows, cols, lineWidth, lineColor, lineOpacity) {
-  const sideLength = width / (cols * 1.5 + 0.5); // ヘクスの辺の長さを計算 (概算)
-  ctx.strokeStyle = lineColor;
-  ctx.lineWidth = lineWidth;
-  ctx.globalAlpha = lineOpacity;
+function drawHexGrid(ctx, offsetX, offsetY, width, height, rows, cols, lineWidth, lineColor, lineOpacity, lineStyle) {
+    const sideLength = width / (cols * 1.5 + 0.5); // ヘクスの辺の長さを計算 (概算)
+    ctx.strokeStyle = lineColor;
+    ctx.lineWidth = lineWidth;
+    ctx.globalAlpha = lineOpacity;
 
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      const centerX = offsetX + sideLength * (col * 1.5 + 1);
-      const centerY = offsetY + sideLength * Math.sqrt(3) * (row + 0.5 * (col % 2));
-      drawHexagon(ctx, centerX, centerY, sideLength);
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            const centerX = offsetX + sideLength * (col * 1.5 + 1);
+            const centerY = offsetY + sideLength * Math.sqrt(3) * (row + 0.5 * (col % 2));
+            drawHexagon(ctx, centerX, centerY, sideLength, lineStyle); // lineStyleを渡す
+        }
     }
-  }
 }
 
-function drawHexagon(ctx, centerX, centerY, sideLength) {
+function drawHexagon(ctx, centerX, centerY, sideLength, lineStyle) {
   const angle = 2 * Math.PI / 6;
+    // 線の種類によるスタイル設定
+    switch (lineStyle) {
+        case "solid":
+            ctx.setLineDash([]);
+            break;
+        case "dotted":
+            ctx.setLineDash([5, 5]);
+            break;
+        case "dashed":
+            ctx.setLineDash([10, 5]);
+            break;
+        default:
+             ctx.setLineDash([]);
+    }
   ctx.beginPath();
-  for (let i = 0; i < 6; i++) {
-    const x = centerX + sideLength * Math.cos(angle * i);
-    const y = centerY + sideLength * Math.sin(angle * i);
-    ctx.lineTo(x, y);
-  }
+    for (let i = 0; i < 6; i++) {
+        const x = centerX + sideLength * Math.cos(angle * i);
+        const y = centerY + sideLength * Math.sin(angle * i);
+        ctx.lineTo(x, y);
+    }
   ctx.closePath();
-  ctx.stroke();
+    ctx.stroke();
 }
 
 // マウスイベントでプレビューをドラッグ
