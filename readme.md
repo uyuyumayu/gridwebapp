@@ -47,4 +47,3 @@
 *   HTML
 *   CSS
 *   JavaScript
-*   [Font Awesome](https://fontawesome.com/) (アイコン)
