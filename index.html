@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>画像グリッドオーバーレイ</title>
-  <link rel="stylesheet" href="https://uyuyumayu.github.io/gridwebapp/style.css"> 
+  <link rel="stylesheet" href="https://uyuyumayu.github.io/gridwebapp/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -10,14 +10,15 @@
     <div class="left-panel">
       <div id="controls">
         <h2>グリッド設定</h2>
-
-        <h2>グリッド設定</h2>
-        <div>
-          <input type="radio" id="grid-type-square" name="grid-type" value="square" checked>
-          <label for="grid-type-square">スクエア</label>
-          <input type="radio" id="grid-type-hex" name="grid-type" value="hex">
-          <label for="grid-type-hex">ヘクス</label>
-        </div>
+    <div class="setting-group">
+      <h3>グリッドタイプ</h3>
+      <div>
+        <input type="radio" id="grid-type-square" name="grid-type" value="square" checked>
+        <label for="grid-type-square">スクエア</label>
+        <input type="radio" id="grid-type-hex" name="grid-type" value="hex">
+        <label for="grid-type-hex">ヘクス</label>
+      </div>
+    </div>
 
         <div>
           <input type="radio" id="grid-mode-size" name="grid-mode" value="size" checked>
@@ -91,6 +92,21 @@
           <input type="color" id="gradient-outer" value="#0000ff">
         </div>
 
+        <br>
+        <h2>塗りつぶし設定</h2>
+        <div class="input-group">
+            <label for="fill-color1">塗りつぶし色1:</label>
+            <input type="color" id="fill-color1" value="#ff0000">
+        </div>
+        <div class="input-group">
+           <label for="fill-color2">塗りつぶし色2:</label>
+            <input type="color" id="fill-color2" value="#0000ff">
+        </div>
+        <div class="input-group">
+            <label for="fill-opacity">塗りつぶし透明度:</label>
+            <input type="range" id="fill-opacity" min="0" max="1" step="0.1" value="0.5">
+         </div>
+         <button id="reset-fill-button" class="download-button">塗りつぶしリセット</button>
         <h2>ダウンロード</h2>
         <label for="download-format">画像+グリッド:</label>
         <select id="download-format">
