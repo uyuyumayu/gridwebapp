@@ -11,6 +11,14 @@
       <div id="controls">
         <h2>グリッド設定</h2>
 
+        <h2>グリッド設定</h2>
+        <div>
+          <input type="radio" id="grid-type-square" name="grid-type" value="square" checked>
+          <label for="grid-type-square">スクエア</label>
+          <input type="radio" id="grid-type-hex" name="grid-type" value="hex">
+          <label for="grid-type-hex">ヘクス</label>
+        </div>
+
         <div>
           <input type="radio" id="grid-mode-size" name="grid-mode" value="size" checked>
           <label for="grid-mode-size">マス目サイズ指定</label>
@@ -18,7 +26,7 @@
           <input type="radio" id="grid-mode-count" name="grid-mode" value="count">
           <label for="grid-mode-count">行と列の数指定</label>
         </div>
-
+        
         <div class="input-group" id="grid-size-controls">
           <label for="grid-size">マス目サイズ (px):</label>
           <input type="number" id="grid-size" value="50">
