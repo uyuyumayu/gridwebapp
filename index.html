@@ -2,145 +2,236 @@
 <html>
 <head>
   <title>画像グリッドオーバーレイ</title>
-  <link rel="stylesheet" href="https://uyuyumayu.github.io/gridwebapp/style.css">
+  <!-- Link to the CSS file -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Link to Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
   <div class="container">
     <div class="left-panel">
+      <h1>設定</h1>
       <div id="controls">
-        <h2>グリッド設定</h2>
-    <div class="setting-group">
-      <h3>グリッドタイプ</h3>
-      <div>
-        <input type="radio" id="grid-type-square" name="grid-type" value="square" checked>
-        <label for="grid-type-square">スクエア</label>
-        <input type="radio" id="grid-type-hex" name="grid-type" value="hex">
-        <label for="grid-type-hex">ヘクス</label>
-      </div>
-    </div>
 
-        <div>
-          <input type="radio" id="grid-mode-size" name="grid-mode" value="size" checked>
-          <label for="grid-mode-size">マス目サイズ指定</label>
+        <div class="setting-group">
+          <h2>グリッドタイプ &amp; モード</h2>
+          <div>
+            <input type="radio" id="grid-type-square" name="grid-type" value="square" checked>
+            <label for="grid-type-square" style="width: auto; text-align: left;">スクエア</label>
+            <input type="radio" id="grid-type-hex" name="grid-type" value="hex">
+            <label for="grid-type-hex" style="width: auto; text-align: left;">ヘクス</label>
+          </div>
+          <hr style="border: none; border-top: 1px dashed #eee; margin: 10px 0;">
+          <div>
+            <input type="radio" id="grid-mode-size" name="grid-mode" value="size" checked>
+            <label for="grid-mode-size" style="width: auto; text-align: left;">マス目サイズ指定</label>
+            <br>
+            <input type="radio" id="grid-mode-count" name="grid-mode" value="count">
+            <label for="grid-mode-count" style="width: auto; text-align: left;">行と列の数指定</label>
+          </div>
+
+          <div class="input-group" id="grid-size-controls">
+            <label for="grid-size">マス目サイズ (px):</label>
+            <input type="number" id="grid-size" value="50" min="1">
+          </div>
+
+          <div class="input-group" id="grid-count-controls">
+            <label for="grid-cols">列数:</label>
+            <input type="number" id="grid-cols" value="10" min="1">
+            <label for="grid-rows">行数:</label>
+            <input type="number" id="grid-rows" value="10" min="1">
+          </div>
+
+          <div class="input-group">
+            <label for="grid-offsetX">Xオフセット (px):</label>
+            <input type="number" id="grid-offsetX" value="0">
+          </div>
+          <div class="input-group">
+            <label for="grid-offsetY">Yオフセット (px):</label>
+            <input type="number" id="grid-offsetY" value="0">
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h2>線のスタイル</h2>
+          <div class="input-group">
+            <label for="line-width">線の太さ (px):</label>
+            <input type="number" id="line-width" value="1" min="1">
+          </div>
+          <div class="input-group">
+            <label for="line-color">線の色:</label>
+            <input type="color" id="line-color" value="#000000">
+          </div>
+          <div class="input-group">
+            <label for="line-style">線の種類:</label>
+            <select id="line-style">
+              <option value="solid">実線</option>
+              <option value="dotted">点線</option>
+              <option value="dashed">破線</option>
+              <option value="gradient">グラデーション線</option>
+              <option value="text">文字</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="line-opacity">線の透明度:</label>
+            <input type="range" id="line-opacity" min="0" max="1" step="0.05" value="1">
+          </div>
+
+          <!-- Text Controls (Initially hidden) -->
+          <div id="text-controls" style="display: none;">
+            <h4>文字グリッド設定</h4>
+            <div class="input-group">
+              <label for="grid-text">文字:</label>
+              <input type="text" id="grid-text" value="+">
+            </div>
+            <div class="input-group">
+              <label for="text-font-size">フォントサイズ (px):</label>
+              <input type="number" id="text-font-size" value="12" min="1">
+            </div>
+            <div class="input-group">
+              <label for="text-rotation">回転:</label>
+              <select id="text-rotation">
+                <option value="none">なし</option>
+                <option value="left">左90度</option>
+                <option value="right">右90度</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="text-spacing">文字間隔 (倍):</label>
+              <input type="number" id="text-spacing" value="2.5" min="0.1" step="0.1">
+            </div>
+          </div>
+
+          <!-- Gradient Controls (Initially hidden) -->
+          <div id="gradient-controls" style="display: none;">
+             <h4>グラデーション線設定</h4>
+            <div class="input-group">
+              <label for="gradient-center">中央の色:</label>
+              <input type="color" id="gradient-center" value="#ff0000">
+            </div>
+            <div class="input-group">
+              <label for="gradient-edge">周辺の色:</label>
+              <input type="color" id="gradient-edge" value="#ffff00">
+            </div>
+            <div class="input-group">
+              <label for="gradient-outer">外側の色:</label>
+              <input type="color" id="gradient-outer" value="#0000ff">
+            </div>
+          </div>
+        </div>
+
+        <!-- Coordinate Display Settings -->
+        <div class="setting-group">
+          <h2>座標表示設定</h2>
+          <div>
+            <input type="checkbox" id="coord-visible-checkbox">
+            <label for="coord-visible-checkbox" style="width: auto; text-align: left;">座標を表示する</label>
+          </div>
+
+          <div id="coord-controls" style="display: none;"> <!-- Initially hidden -->
+            <div class="input-group">
+              <label for="coord-format">形式:</label>
+              <select id="coord-format">
+                <option value="A1">A1, B1, ...</option>
+                <option value="0-0">0-0, 1-0, ...</option>
+                <option value="1-1">1-1, 2-1, ...</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="coord-position">表示位置:</label>
+              <select id="coord-position">
+                <option value="center">中央</option>
+                <option value="top-left">左上</option>
+                <option value="top-right">右上</option>
+                <option value="bottom-left">左下</option>
+                <option value="bottom-right">右下</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="coord-font-size">フォントサイズ:</label>
+              <input type="number" id="coord-font-size" value="10" min="5">
+            </div>
+            <div class="input-group">
+              <label for="coord-color">文字色:</label>
+              <input type="color" id="coord-color" value="#000000">
+            </div>
+             <div class="input-group">
+              <label for="coord-opacity">文字透明度:</label>
+              <input type="range" id="coord-opacity" min="0" max="1" step="0.05" value="0.8">
+            </div>
+            <!-- Optional Offset Controls
+            <div class="input-group">
+                <label for="coord-offset-x">Xオフセット(px):</label>
+                <input type="number" id="coord-offset-x" value="0">
+            </div>
+             <div class="input-group">
+                <label for="coord-offset-y">Yオフセット(px):</label>
+                <input type="number" id="coord-offset-y" value="0">
+            </div> -->
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h2>塗りつぶし設定 (スクエアのみ)</h2>
+          <div class="input-group">
+              <label for="fill-color1">塗りつぶし色1:</label>
+              <input type="color" id="fill-color1" value="#ff0000">
+          </div>
+          <div class="input-group">
+             <label for="fill-color2">塗りつぶし色2:</label>
+              <input type="color" id="fill-color2" value="#0000ff">
+          </div>
+          <div class="input-group">
+              <label for="fill-opacity">塗りつぶし透明度:</label>
+              <input type="range" id="fill-opacity" min="0" max="1" step="0.05" value="0.5">
+           </div>
+           <button id="reset-fill-button" class="download-button">塗りつぶしリセット</button>
+        </div>
+
+        <div class="setting-group download-section">
+          <h2>ダウンロード</h2>
+          <div>
+            <label for="download-format">画像+グリッド:</label>
+            <select id="download-format">
+              <option value="webp">webp</option>
+              <option value="jpg">jpg</option>
+              <option value="png">png</option>
+            </select>
+            <button id="download-button" class="download-button">
+              <span>ダウンロード</span>
+              <i class="download-icon fas fa-download"></i>
+            </button>
+          </div>
           <br>
-          <input type="radio" id="grid-mode-count" name="grid-mode" value="count">
-          <label for="grid-mode-count">行と列の数指定</label>
+          <div>
+            <label for="grid-only-format">グリッドのみ:</label>
+            <select id="grid-only-format">
+              <option value="png">png (透過)</option>
+              <option value="webp">webp (透過)</option>
+              <option value="jpg">jpg (白背景)</option>
+            </select>
+            <button id="grid-only-button" class="download-button">
+              <span>ダウンロード</span>
+              <i class="download-icon fas fa-download"></i>
+            </button>
+          </div>
         </div>
-        
-        <div class="input-group" id="grid-size-controls">
-          <label for="grid-size">マス目サイズ (px):</label>
-          <input type="number" id="grid-size" value="50">
-        </div>
-
-        <div class="input-group" id="grid-count-controls">
-          <label for="grid-cols">列数:</label>
-          <input type="number" id="grid-cols" value="10">
-          <label for="grid-rows">行数:</label>
-          <input type="number" id="grid-rows" value="10">
-        </div>
-
-        <div class="input-group">
-          <label for="grid-offsetX">Xオフセット:</label>
-          <input type="number" id="grid-offsetX" value="0">
-        </div>
-        <div class="input-group">
-          <label for="grid-offsetY">Yオフセット:</label>
-          <input type="number" id="grid-offsetY" value="0">
-        </div>
-
-        <br>
-        <label for="line-width">線の太さ:</label>
-        <input type="number" id="line-width" value="1">
-
-        <br>
-        <label for="line-color">線の色:</label>
-        <input type="color" id="line-color" value="#000000">
-
-        <label for="line-style">線の種類:</label>
-        <select id="line-style">
-          <option value="solid">実線</option>
-          <option value="dotted">点線</option>
-          <option value="dashed">破線</option>
-          <option value="gradient">グラデーション線</option>
-          <option value="text">文字</option>
-        </select>
-
-        <div id="text-controls" style="display: none;">
-          <label for="grid-text">文字:</label>
-          <input type="text" id="grid-text" value="+">
-          <label for="text-font-size">フォントサイズ (px):</label>
-          <input type="number" id="text-font-size" value="12">
-          <label for="text-rotation">回転方向:</label>
-          <select id="text-rotation">
-            <option value="left">左回転</option>
-            <option value="right">右回転</option>
-          </select>
-          <label for="text-spacing">文字間隔:</label>
-          <input type="number" id="text-spacing" value="2.5">
-        </div>
-
-        <label for="line-opacity">線の透明度:</label>
-        <input type="range" id="line-opacity" min="0" max="1" step="0.1" value="1">
-
-        <div id="gradient-controls" style="display: none;">
-          <label for="gradient-center">中央の色:</label>
-          <input type="color" id="gradient-center" value="#ff0000">
-          <label for="gradient-edge">周辺の色:</label>
-          <input type="color" id="gradient-edge" value="#ffff00">
-          <label for="gradient-outer">外側の色:</label>
-          <input type="color" id="gradient-outer" value="#0000ff">
-        </div>
-
-        <br>
-        <h2>塗りつぶし設定</h2>
-        <div class="input-group">
-            <label for="fill-color1">塗りつぶし色1:</label>
-            <input type="color" id="fill-color1" value="#ff0000">
-        </div>
-        <div class="input-group">
-           <label for="fill-color2">塗りつぶし色2:</label>
-            <input type="color" id="fill-color2" value="#0000ff">
-        </div>
-        <div class="input-group">
-            <label for="fill-opacity">塗りつぶし透明度:</label>
-            <input type="range" id="fill-opacity" min="0" max="1" step="0.1" value="0.5">
-         </div>
-         <button id="reset-fill-button" class="download-button">塗りつぶしリセット</button>
-        <h2>ダウンロード</h2>
-        <label for="download-format">画像+グリッド:</label>
-        <select id="download-format">
-          <option value="webp">webp</option>
-          <option value="jpg">jpg</option>
-          <option value="png">png</option>
-        </select>
-        <button id="download-button" class="download-button">
-          <span>ダウンロード</span>
-          <i class="download-icon fas fa-download"></i>
-        </button>
-        <br><br>
-        <label for="grid-only-format">グリッドのみ:</label>
-        <select id="grid-only-format">
-          <option value="png">png</option>
-          <option value="webp">webp</option>
-          <option value="jpg">jpg</option>
-        </select>
-        <button id="grid-only-button" class="download-button">
-          <span>ダウンロード</span>
-          <i class="download-icon fas fa-download"></i>
-        </button>
       </div>
     </div>
+
     <div class="right-panel">
-<div id="drop-area">
-  <p>ここに画像をドラッグ＆ドロップ</p>
-  <input type="file" id="file-input" accept="image/*"> </div>
-        <div id="preview-area">
+      <div id="drop-area">
+        <p><i class="fas fa-image fa-2x"></i></p>
+        <p>ここに画像をドラッグ＆ドロップ<br>またはクリックしてファイルを選択</p>
+        <input type="file" id="file-input" accept="image/*">
+      </div>
+      <div id="preview-area" title="ホイール:ズーム / Ctrl+ドラッグ or 中ドラッグ:移動 / 左クリック:塗りつぶし">
         <canvas id="preview-canvas"></canvas>
       </div>
     </div>
   </div>
 
+  <!-- Link to the JavaScript file -->
   <script src="script.js"></script>
 </body>
 </html>
