@@ -3,39 +3,60 @@ body {
   margin: 0;
   background-color: #f4f4f4;
   color: #333;
+  /* Prevent body scrolling when interacting with preview */
+  overflow: hidden;
 }
 
 .container {
   display: flex;
-  height: 100vh;
+  height: 100vh; /* Use full viewport height */
+  width: 100vw; /* Use full viewport width */
 }
 
 .left-panel {
-  width: 30%;
+  width: 350px; /* Fixed width might be better for controls */
+  min-width: 300px; /* Minimum width */
   padding: 20px;
   background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Shadow on the right */
+  overflow-y: auto; /* Allow scrolling if controls exceed height */
+  height: 100vh; /* Full height */
+  box-sizing: border-box; /* Include padding in width/height */
+  z-index: 10; /* Keep controls above preview */
 }
 
 .right-panel {
-  width: 70%;
+  flex-grow: 1; /* Take remaining width */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Align items to the top */
+  height: 100vh; /* Full height */
+  overflow: hidden; /* Prevent scrollbars on the panel itself */
+  position: relative; /* Needed for absolute positioning of canvas */
 }
 
-h1, h2 {
+h1, h2, h3 { /* Added h3 styling */
   text-align: left;
   color: #333;
+  margin-top: 15px; /* Spacing between sections */
+  margin-bottom: 10px;
+}
+
+h2 {
+  border-bottom: 1px solid #eee; /* Separator line */
+  padding-bottom: 5px;
 }
 
 label {
-  display: inline-block; 
+  display: inline-block;
   margin-bottom: 5px;
-  color: #555; 
-  width: 130px;         
-  text-align: right;     
+  color: #555;
+  width: 130px; /* Adjust as needed */
+  text-align: right;
+  margin-right: 10px; /* Space between label and input */
+  vertical-align: middle; /* Align label with input */
+  font-size: 14px; /* Slightly smaller font */
 }
 
 input, select {
@@ -44,86 +65,181 @@ input, select {
   border: 1px solid #ddd;
   border-radius: 4px;
   box-sizing: border-box;
+  vertical-align: middle; /* Align input with label */
+}
+
+input[type="number"] {
+  width: 70px; /* Slightly wider for numbers */
 }
 
 input[type="color"] {
-  padding: 2px; 
-  height: 32px; 
+  padding: 2px;
+  height: 32px; /* Consistent height */
+  width: 40px; /* Compact color input */
+  vertical-align: middle;
+  border: 1px solid #ddd; /* Add border for consistency */
+  border-radius: 4px;
 }
+
+input[type="range"] {
+    width: 100px; /* Adjust range slider width */
+    vertical-align: middle;
+    padding: 0; /* Remove default padding */
+}
+
+input[type="radio"] + label { /* Style labels next to radio buttons */
+    width: auto; /* Don't force width */
+    text-align: left;
+    margin-right: 15px; /* Space between radio options */
+}
+input[type="radio"] {
+    margin-right: 5px; /* Space between radio and its label */
+    vertical-align: middle;
+}
+
 
 .input-group {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;  
+  /* display: flex; */ /* Using inline-block/vertical-align instead */
+  /* align-items: center; */
+  margin-bottom: 10px;
 }
 
-.input-group input[type="number"] {
-  width: 60px;           
-  margin-right: 10px; 
+/* Specific adjustments for layout */
+#grid-count-controls label {
+    width: 50px; /* Shorter labels for row/col count */
+}
+#grid-count-controls input[type="number"] {
+    width: 60px;
+    margin-right: 15px; /* Space between col and row inputs */
 }
 
 #drop-area {
-  width: 80%;
-  height: 200px;
+  width: calc(100% - 40px); /* Use available width with padding */
+  max-width: 600px; /* Optional max width */
+  height: 150px; /* Reduced height */
   border: 2px dashed #ccc;
   text-align: center;
   display: flex;
+  flex-direction: column; /* Stack text and input */
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease;
-  margin-bottom: 20px;
-  background-color: #f9f9f9; 
-  border-radius: 8px; 
+  margin: 20px; /* Add margin around drop area */
+  background-color: #f9f9f9;
+  border-radius: 8px;
   color: #777;
+  cursor: pointer; /* Indicate it's clickable */
+}
+
+#drop-area p {
+    margin-bottom: 10px; /* Space below text */
 }
 
 #drop-area.highlight {
   background-color: #e9ecef;
+  border-color: #aaa; /* Darker border on highlight */
 }
 
 #preview-area {
-  width: 80%;
-  height: calc(100% - 220px);
-  border: 1px solid #ddd;
-  // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓  修正箇所
-  overflow: auto;        // スクロールバーを追加
-  // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-  position: relative;
+  flex-grow: 1; /* Take remaining vertical space */
+  width: calc(100% - 40px); /* Use available width with padding */
+  border: 1px solid #bbb; /* Slightly darker border */
+  overflow: hidden; /* Hide canvas overflow, rely on pan/zoom */
+  position: relative; /* Crucial for absolute positioned canvas */
+  background-color: #e0e0e0; /* Background visible when image is smaller */
+  margin: 0 20px 20px 20px; /* Margin bottom and sides */
+  cursor: grab; /* Default cursor for panning indication */
 }
 
 #preview-canvas {
-  position: absolute;
+  display: block; /* Remove extra space below canvas */
+  position: absolute; /* Position relative to preview-area */
+  top: 0; /* Align top */
+  left: 0; /* Align left */
+  /* width and height set by JS style */
+  background-color: #fff; /* Canvas background for transparency */
+  /* image-rendering for sharper pixels when zoomed (optional) */
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 .download-button {
   background-color: #007bff;
   border: none;
   color: white;
-  padding: 10px 20px;
+  padding: 10px 15px; /* Adjusted padding */
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
+  font-size: 14px; /* Slightly smaller font */
+  /* margin: 4px 2px; */ /* Use margin-right instead */
+  margin-right: 10px;
+  margin-bottom: 10px; /* Space below buttons */
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.3s ease;
+  vertical-align: middle;
 }
 
 .download-button:hover {
   background-color: #0056b3;
 }
 
-.download-icon {
-  margin-left: 10px;
+.download-button i { /* Style icon inside button */
+  margin-left: 8px;
+}
+
+/* Separate styling for reset button if desired */
+#reset-fill-button {
+    background-color: #dc3545; /* Red color for reset/delete actions */
+}
+#reset-fill-button:hover {
+    background-color: #c82333;
+}
+
+
+.download-section label,
+.download-section select {
+    margin-bottom: 10px;
+}
+.download-section select {
+    margin-right: 10px; /* Space between select and button */
 }
 
 #file-input {
-  display: none;
+  display: none; /* Keep hidden */
 }
 
-/* グレーアウトのスタイル */
-input:disabled, select:disabled {
+/* Gray out disabled elements */
+input:disabled, select:disabled, button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  background-color: #eee; /* Optional: visual cue */
+}
+input:disabled + label, select:disabled + label { /* Also style labels for disabled inputs */
+  opacity: 0.5;
+}
+
+/* Hide specific controls initially or based on selection */
+#text-controls, #gradient-controls {
+    padding-left: 20px; /* Indent these controls */
+    border-left: 2px solid #eee; /* Visual separation */
+    margin-left: 5px;
+    margin-top: 10px; /* Space above the indented section */
+}
+
+.setting-group { /* Grouping related settings */
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #eee; /* Dashed separator */
+}
+.setting-group:last-child {
+    border-bottom: none; /* No border for the last group */
+}
+
+/* Adjust label width for specific sections if needed */
+#text-controls label, #gradient-controls label {
+    width: 110px; /* Slightly shorter labels within these sections */
 }
